@@ -128,22 +128,23 @@ public class ExelDataService {
         return true;
     }
 
-    private static String getJsonFromObj(List<List<ExelData>> led) throws JSONException {
+    public static String getJsonFromObjByDay(List<SeriesData> lsd,String chartTitle,String chartSubTitle,List<String> chartXAxisCate,String chartYAxisTitleText) throws JSONException {
 
-        JSONArray js = new JSONArray();
+        JSONObject jo = new JSONObject();
 
-        for (int i = 0; i < led.size(); i++) {
-            JSONArray jr = new JSONArray();
-            for (int j = 0; j < led.get(i).size(); j++) {
-                JSONObject jobj = new JSONObject();
-                jobj.put("datapa", led.get(i).get(j).getDatapa());
-                jobj.put("pa", led.get(i).get(j).getPa());
-                jobj.put("ps", led.get(i).get(j).getPs());
-                jr.add(jobj);
-            }
-            js.add(jr);
+        JSONArray jr = new JSONArray();
+        for (int i = 0; i < lsd.size(); i++) {
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("data",lsd.get(i).getData());
+            jsonObj.put("name",lsd.get(i).getName());
+            jr.add(jsonObj);
         }
 
-        return js.toJSONString();
+        jo.put("seriesData",jr);
+        jo.put("chartTitle",chartTitle);
+        jo.put("chartSubTitle",chartSubTitle);
+        jo.put("chartXAxisCate",chartXAxisCate);
+        jo.put("chartYAxisTitleText",chartYAxisTitleText);
+        return jo.toJSONString();
     }
 }

@@ -17,7 +17,6 @@ public class test {
             String filePath = "/home/phanquan/IdeaProjects/ChartProjectWithAngularJSSpringBoot/tmp/data.xls";
             Map<String, Map<String, List<ExelData>>> list = ExelDataService.readExel(filePath);
             Map<String, List<ExelData>> newList = ExelDataService.getExelDatabyAvg(list);
-//            System.out.print(list);
             List<SeriesData> sd = ExelDataService.getSeriesDataByDay(newList);
             System.out.print(sd);
         } catch (IOException e) {
