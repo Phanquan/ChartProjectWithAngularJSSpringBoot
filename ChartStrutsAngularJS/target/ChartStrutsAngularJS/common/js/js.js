@@ -51,9 +51,10 @@ function setOptions(data,$http) {
 
                 let indexOfSheet = this.columnIndex;
                 let indexOfColumn = event.point.x;
-                $http.get("http://localhost:4200/getExelDataByHour")
+                $http.get(`http://localhost:4200/getDataByMin/${indexOfSheet}/${indexOfColumn}`)
                     .then(function(res) {
-                        let newOptions2 = setOptions2(res.data,indexOfSheet,indexOfColumn);
+                        console.log(res.data);
+                        let newOptions2 = setOptions2(res.data);
                         let chart2 = new Highcharts.chart(newOptions2);
                     })
             }
@@ -62,21 +63,12 @@ function setOptions(data,$http) {
     return options;
 }
 
-function setOptions2(data,y,x) {
+function setOptions2(data) {
     let options = opts2;
     options.title.text = data.chartTitle;
-    options.xAxis.categories = data.chartXAxisCate;
+    // options.xAxis.categories = data.chartXAxisCate;
     options.yAxis.title.text = data.chartYAxisTitleText;
-    data.seriesDataByHour.forEach(function(item,i){
-        if (i === y) {
-            item.forEach(function(ele,j){
-                if (j === x) {
-                    // console.log(ele)
-                    ele[0].type = "area";0
-                    options.series = ele;
-                }
-            })
-        }
-    })
+    options.series = data.seriesDataByHour[0][0];
+
     return options;
 }

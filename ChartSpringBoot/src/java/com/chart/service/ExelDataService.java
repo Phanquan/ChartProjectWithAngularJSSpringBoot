@@ -22,11 +22,12 @@ import java.util.*;
 
 public class ExelDataService {
 
-    public static Map<String, Map<String, List<ExelData>>> readExel(String filePath) throws IOException {
+    public static Map<String, List<ExelData>> readExel(String filePath) throws IOException {
         FileInputStream is = new FileInputStream(new File(filePath));
         HSSFWorkbook workbook = new HSSFWorkbook(is);
-        Map<String, Map<String, List<ExelData>>> cellValues = getExelDataWithMap(workbook);
-        return cellValues;
+        Map<String, Map<String, List<ExelData>>> rawData = getExelDataWithMap(workbook);
+        Map<String, List<ExelData>> exelData = getExelDatabyAvg(rawData);
+        return exelData;
     }
 
     public static Map<String, Map<String, List<ExelData>>> getExelDataWithMap(HSSFWorkbook workbook) {
@@ -82,6 +83,7 @@ public class ExelDataService {
 
     public static List<SeriesData> getSeriesDataByDay(Map<String, List<ExelData>> ld) {
         List<SeriesData> seriesDataByDay = new ArrayList<>();
+        int k = 0;
         for (Map.Entry<String, List<ExelData>> entry : ld.entrySet()) {
             String name = entry.getKey();
             List<ExelData> ed = entry.getValue();
@@ -93,12 +95,29 @@ public class ExelDataService {
                 }
                 dataPA.add(Double.parseDouble(new DecimalFormat(".##").format(countPA / 6)));
             }
-            seriesDataByDay.add(new SeriesData(name, dataPA));
+            seriesDataByDay.add(new SeriesData(k, name, dataPA));
+            k++;
         }
         return seriesDataByDay;
     }
 
-
+    public static List<List<List<SeriesData>>> getSeriesDataByHour(Map<String, List<ExelData>> md) {
+        List<List<List<SeriesData>>> listDataByHour = new ArrayList<>();
+        for (Map.Entry<String, List<ExelData>> entryOfMD : md.entrySet()) {
+            List<List<SeriesData>> listDataBySheetIndex = new ArrayList<>();
+            for (int i = 0; i < entryOfMD.getValue().size(); i += 144) {
+                List<Double> dataPA = new ArrayList<>();
+                List<Double> dataPS = new ArrayList<>();
+                for (int j = i; j < i + 144; j++) {
+                    dataPA.add(Double.parseDouble(entryOfMD.getValue().get(j).getPa()));
+                    dataPS.add(Double.parseDouble(entryOfMD.getValue().get(j).getPs()));
+                }
+                listDataBySheetIndex.add(Arrays.asList(new SeriesData("PA", dataPA), new SeriesData("PS", dataPS)));
+            }
+            listDataByHour.add(listDataBySheetIndex);
+        }
+        return listDataByHour;
+    }
 
 
     private static <KEY, VALUE> void putToMap(Map<KEY, List<VALUE>> map, KEY key, VALUE value) {
@@ -128,23 +147,53 @@ public class ExelDataService {
         return true;
     }
 
-    public static String getJsonFromObjByDay(List<SeriesData> lsd,String chartTitle,String chartSubTitle,List<String> chartXAxisCate,String chartYAxisTitleText) throws JSONException {
+    public static String getJsonFromObjByDay(List<SeriesData> lsd, String chartTitle, String chartSubTitle, List<String> chartXAxisCate, String chartYAxisTitleText) throws JSONException {
 
         JSONObject jo = new JSONObject();
 
         JSONArray jr = new JSONArray();
         for (int i = 0; i < lsd.size(); i++) {
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("data",lsd.get(i).getData());
-            jsonObj.put("name",lsd.get(i).getName());
+            jsonObj.put("id", lsd.get(i).getId());
+            jsonObj.put("data", lsd.get(i).getData());
+            jsonObj.put("name", lsd.get(i).getName());
             jr.add(jsonObj);
         }
 
-        jo.put("seriesData",jr);
-        jo.put("chartTitle",chartTitle);
-        jo.put("chartSubTitle",chartSubTitle);
-        jo.put("chartXAxisCate",chartXAxisCate);
-        jo.put("chartYAxisTitleText",chartYAxisTitleText);
+        jo.put("seriesData", jr);
+        jo.put("chartTitle", chartTitle);
+        jo.put("chartSubTitle", chartSubTitle);
+        jo.put("chartXAxisCate", chartXAxisCate);
+        jo.put("chartYAxisTitleText", chartYAxisTitleText);
+        return jo.toJSONString();
+    }
+
+    public static String getJsonFromObjByHour(List<List<List<SeriesData>>> ldbh, int indexOfSheet, int indexOfColumn, String chartTitle, String chartSubTitle, List<String> chartXAxisCate, String chartYAxisTitleText) throws JSONException {
+        JSONObject jo = new JSONObject();
+        JSONArray jaFinal = new JSONArray();
+
+        for (int i = 0; i < ldbh.size(); i++) {
+            if (i == indexOfSheet) {
+                for (int j = 0; j < ldbh.get(i).size(); j++) {
+                    if (j == indexOfColumn) {
+                        JSONObject joPA = new JSONObject();
+                        JSONObject joPS = new JSONObject();
+                        joPA.put("name", ldbh.get(i).get(j).get(0).getName());
+                        joPA.put("data", ldbh.get(i).get(j).get(0).getData());
+                        joPS.put("name", ldbh.get(i).get(j).get(1).getName());
+                        joPS.put("data", ldbh.get(i).get(j).get(1).getData());
+                        jaFinal.add(Arrays.asList(joPA, joPS));
+                    }
+                }
+            }
+        }
+
+        jo.put("seriesDataByHour", jaFinal);
+        jo.put("chartTitle", chartTitle);
+        jo.put("chartSubTitle", chartSubTitle);
+        jo.put("chartXAxisCate", chartXAxisCate);
+        jo.put("chartYAxisTitleText", chartYAxisTitleText);
+
         return jo.toJSONString();
     }
 }

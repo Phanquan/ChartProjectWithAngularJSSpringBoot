@@ -15,9 +15,9 @@ public class test {
     public static void main(String[] args) {
         try {
             String filePath = "/home/phanquan/IdeaProjects/ChartProjectWithAngularJSSpringBoot/tmp/data.xls";
-            Map<String, Map<String, List<ExelData>>> list = ExelDataService.readExel(filePath);
-            Map<String, List<ExelData>> newList = ExelDataService.getExelDatabyAvg(list);
+            Map<String, List<ExelData>> newList = ExelDataService.readExel(filePath);
             List<SeriesData> sd = ExelDataService.getSeriesDataByDay(newList);
+            List<List<List<SeriesData>>> llled = ExelDataService.getSeriesDataByHour(newList);
             System.out.print(sd);
         } catch (IOException e) {
             e.printStackTrace();

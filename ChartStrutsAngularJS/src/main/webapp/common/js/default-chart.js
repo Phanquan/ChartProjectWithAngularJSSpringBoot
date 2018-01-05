@@ -21,7 +21,7 @@ let opts = {
         }
     },
     xAxis: {
-        crosshair: true
+        crosshair: true,
     },
     yAxis: {
         min: 0,
@@ -32,7 +32,7 @@ let opts = {
 let opts2 = {
     chart: {
         renderTo:'container2',
-        type: 'line'
+        type: 'line',
     },
     title: {
         text: ''
@@ -41,10 +41,15 @@ let opts2 = {
         text: ''
     },
     xAxis: {
+        type: "datetime",
         categories: [],
+        // tickInterval: 6,
         tickmarkPlacement: 'on',
         title: {
             enabled: false
+        },
+        labels:{
+            format: '{value: %H}'
         }
     },
     yAxis: {
@@ -59,7 +64,10 @@ let opts2 = {
     },
     tooltip: {
         split: true,
-        valueSuffix: ' kW'
+        valueSuffix: ' kW',
+
+        xDateFormat: '%M:%S',
+        shared: true
     },
     plotOptions: {
         area: {
@@ -70,6 +78,18 @@ let opts2 = {
                 lineWidth: 1,
                 lineColor: '#666666'
             }
+        },
+        line: {
+            lineWidth: 2,
+            states: {
+                hover: {
+                    lineWidth: 4
+                }
+            },
+            marker: {
+                enabled: false
+            },
+            pointInterval: 600000, // one hour
         }
     },
     series: []
