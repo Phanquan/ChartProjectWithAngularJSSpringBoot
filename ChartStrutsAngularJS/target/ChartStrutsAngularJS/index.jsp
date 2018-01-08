@@ -18,15 +18,15 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2" ng-controller="btnCtrl">
+        <div class="col-2" ng-controller="btnCtrl">
             <div ng-if="data" ng-repeat="sd in data">
                 <button id="btnOke" class="btn btn-primary" ng-click="toggleExelData(sd.id,sd.visible)">{{sd.name}}</button>
             </div>
         </div>
 
-        <div class="col-sm-10">
-            <div id="ch-container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-            <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div class="col-10">
+            <div id="ch-container" style="max-width: 650px; height: 400px; margin: 0 auto"></div>
+            <div id="container2" style="max-width: 650px; height: 400px; margin: 0 auto"></div>
         </div>
     </div>
 </div>

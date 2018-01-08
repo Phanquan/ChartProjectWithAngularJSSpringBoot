@@ -44,13 +44,13 @@ let opts2 = {
         type: "datetime",
         categories: [],
         // tickInterval: 6,
-        tickmarkPlacement: 'on',
         title: {
             enabled: false
         },
         labels:{
             format: '{value: %H}'
-        }
+        },
+        tickmarkPlacement: 'between'
     },
     yAxis: {
         title: {
@@ -66,7 +66,7 @@ let opts2 = {
         split: true,
         valueSuffix: ' kW',
 
-        xDateFormat: '%M:%S',
+        xDateFormat: '%H:%M:%S',
         shared: true
     },
     plotOptions: {
@@ -77,7 +77,9 @@ let opts2 = {
             marker: {
                 lineWidth: 1,
                 lineColor: '#666666'
-            }
+            },
+            pointInterval: 600000, // one hour
+
         },
         line: {
             lineWidth: 2,

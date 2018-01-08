@@ -68,6 +68,12 @@ function setOptions2(data) {
     options.title.text = data.chartTitle;
     // options.xAxis.categories = data.chartXAxisCate;
     options.yAxis.title.text = data.chartYAxisTitleText;
+
+    data.seriesDataByHour[0][0][1].type = "line";
+    data.seriesDataByHour[0][0][1].color = "#f49842";
+    data.seriesDataByHour[0][0][0].type = "area";
+
+
     options.series = data.seriesDataByHour[0][0];
 
     return options;
