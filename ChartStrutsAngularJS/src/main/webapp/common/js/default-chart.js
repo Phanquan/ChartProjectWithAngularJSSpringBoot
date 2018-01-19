@@ -33,6 +33,7 @@ let opts2 = {
     chart: {
         renderTo:'container2',
         type: 'line',
+        zoomType: 'x'
     },
     title: {
         text: ''
@@ -48,7 +49,7 @@ let opts2 = {
             enabled: false
         },
         labels:{
-            format: '{value: %H}'
+            format: '{value: %H:%M}'
         },
         tickmarkPlacement: 'between'
     },

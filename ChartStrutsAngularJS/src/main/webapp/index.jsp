@@ -29,6 +29,11 @@
             <div id="container2" style="max-width: 650px; height: 400px; margin: 0 auto"></div>
         </div>
     </div>
+    <div class="row">
+        <div ng-controller="chartbyMinCtrl" ng-init="getChartByMinData()">
+            <p>{{indexObj | json}}</p>
+        </div>
+    </div>
 </div>
 
 

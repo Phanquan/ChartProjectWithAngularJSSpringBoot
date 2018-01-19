@@ -3,7 +3,6 @@ package com.chart.controller;
 import com.chart.model.ExelData;
 import com.chart.model.SeriesData;
 import com.chart.service.ExelDataService;
-import org.apache.sling.commons.json.JSONException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,21 +16,17 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 public class ExelDataByMinuteController {
-    private String filePath = "/c/Users/paquan/Desktop/ChartProjectWithAngularJSSpringBoot-master/tmp/data.xls";
+    private String filePath = "C:\\Users\\paquan\\Desktop\\ChartProjectWithAngularJSSpringBoot-master\\tmp\\data.xls";
 
-    @GetMapping("/getDataByMin/{iOfSheet}/{iOfColumn}")
-    public String getDataByMinutes(@PathVariable("iOfSheet") int ioS, @PathVariable("iOfColumn") int ioC) {
+    @GetMapping("/getDataByMin")
+    public String getDataByMinutes() {
         try {
             String chartTitle = "HourlyPA";
             String chartSubTitle = "(W43 24/10/2016 - 30/10/2016)";
-            List<String> chartXAxisCate = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12");
             String chartYAxisTitleText = "Appelee (kW)";
             Map<String, List<ExelData>> mapData = ExelDataService.readExel(filePath);
             List<List<List<SeriesData>>> ldbh = ExelDataService.getSeriesDataByHour(mapData);
-            return ExelDataService.getJsonFromObjByHour(ldbh, ioS, ioC, chartTitle, chartSubTitle, chartXAxisCate, chartYAxisTitleText);
-        } catch (JSONException ejson) {
-            ejson.printStackTrace();
-            return "error parseJson";
+            return ExelDataService.getJsonFromObjByHour(ldbh, chartTitle, chartSubTitle, chartYAxisTitleText);
         } catch (IOException eio) {
             eio.printStackTrace();
             return "error fileInput";

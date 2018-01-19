@@ -3,7 +3,6 @@ package com.chart.controller;
 import com.chart.model.ExelData;
 import com.chart.model.SeriesData;
 import com.chart.service.ExelDataService;
-import org.apache.sling.commons.json.JSONException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,7 @@ import java.util.Map;
 @CrossOrigin
 public class ExelDataByDayController {
 
-    private String filePath = "/c/Users/paquan/Desktop/ChartProjectWithAngularJSSpringBoot-master/tmp/data.xls";
+    private String filePath = "C:\\Users\\paquan\\Desktop\\ChartProjectWithAngularJSSpringBoot-master\\tmp\\data.xls";
 
     @GetMapping("/getExelData")
     public String greeting() {
@@ -29,9 +28,6 @@ public class ExelDataByDayController {
             Map<String, List<ExelData>> mapData = ExelDataService.readExel(filePath);
             List<SeriesData> sd = ExelDataService.getSeriesDataByDay(mapData);
             return ExelDataService.getJsonFromObjByDay(sd,chartTitle,chartSubTitle,chartXAxisCate,chartYAxisTitleText);
-        } catch (JSONException ejson) {
-            ejson.printStackTrace();
-            return "error parseJson";
         } catch (IOException eio) {
             eio.printStackTrace();
             return "error fileInput";
